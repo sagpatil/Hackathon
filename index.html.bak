@@ -1,0 +1,22 @@
+<!DOCTYPE html> 
+<html> 
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<title>Testing</title>
+	<link type="text/css" rel="stylesheet" media="screen" href="app.css" />
+	<script src="jquery-1.7.2.js"></script>
+	<script type="text/javascript">
+	function openUrl() {
+		var args = new blackberry.invoke.BrowserArguments("https://www.facebook.com/dialog/oauth?client_id=312893812055050&redirect_uri=http://passwordsync.filiussoft.com");
+		blackberry.invoke.invoke(blackberry.invoke.APP_BROWSER, args);
+	}
+	</script>
+</head>
+<body>
+  <div id="show_hash" style="color: #ffffff;"></div>
+	<input type="button" value="Click me..." onclick="openUrl()" />
+	<a href=https://www.facebook.com/dialog/oauth?client_id=312893812055050&redirect_uri=http://passwordsync.filiussoft.com">Login With FB</a>
+
+</body>
+</html>
