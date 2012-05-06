@@ -10,16 +10,19 @@ setAction("Loading Hackbook", true);
 getSportyFriends();
 
 function getSportyFriends() {
-  var markup = '<h1>Your Sporty Friends!!</h1>';
+  var markup = '<h1>Your Sporty Friends / Recent Comparisons</h1>';
   friendsInfo = new Array();
   for (var i=0, l=localStorage.length; i<l; i++){
         var key = localStorage.key(i);
       //  var value = localStorage[key];
         friendsInfo[i] = getSportData(key);
+
 }
   //friendsInfo = new Array(getSportsData(12606341),getSportsData(551525361));
+
   for (var i=0; i < friendsInfo.length && i < 25; i++) {
-    markup = markup + '<img src="' + friendsInfo[i].picture + '">' + '&nbsp;&nbsp;&nbsp;<b>' + friendsInfo[i].name + '</b><br />';
+    markup = markup + '<img src="' + friendsInfo[i].picture + '" onclick="doComparison(\'' + friendsInfo[i].name + '\',\'' + friendsInfo[i].id + '\',\'' + friendsInfo[i].picture + '\')">' + '&nbsp;&nbsp;&nbsp;<b>' + friendsInfo[i].name + '</b><br />';
+
   }
   
   FB.$('sporty-friends').innerHTML = markup;

@@ -268,9 +268,9 @@ function fetchSportData4() {
 }
 
 
-function genSportResultString(displayData) {
+function genSportResultString(displayData, name) {
  return '<div class="info">'
-        + '  <div class="name"> You worked out ' + displayData[1] + ' for ' + (displayData[2] / 60.0 / 60.0).toFixed(2) + ' hours and went ' + displayData[0].toFixed(2) + ' miles.</div>'
+        + '  <div class="name"> <b>' + name + '</b> worked out <b> ' + displayData[1] + ' </b> time(s) for <b>' + (displayData[2] / 60.0 / 60.0).toFixed(2) + '</b> hours and ran ' + displayData[0].toFixed(2) + ' miles.</div>'
         + '</div>';
 }
 
@@ -331,6 +331,7 @@ function doComparison(name, id, picture) {
   var sportData = {};
   sportData.name = name;
   sportData.picture = picture;
+  sportData.id = id;
 	storeSportData(id, sportData);
 
   openPage('Social-Plugins');  
@@ -339,18 +340,18 @@ function doComparison(name, id, picture) {
 }
 
 function doComparisonComplete(resultDataAll, friendId) {
-	var dom = FB.$('yourstats');
-	dom.innerHTML = genSportResultString(resultDataAll[0]);
 	var sportData = getSportData(friendId);
+	var html = '<div style = "width:70%;margin:20px auto; font-size:17px;color: #666">';
+	var dom = FB.$('yourstats');
+	dom.innerHTML = genSportResultString(resultDataAll[0], 'You');
 	var dom = FB.$('friendstats');
-	dom.innerHTML = '<div>' + sportData.name + '</div>';
-	dom.innerHTML += genSportResultString(resultDataAll[1]);
+	dom.innerHTML = genSportResultString(resultDataAll[1], sportData.name);
 	var dom = FB.$('statresults');
 
-	if (resultDataAll[0].totalDistance > resultDataAll[1].totalDistance) {
-		dom.innerHTML = 'You were out running more...asked your friend to join you next time';
+	if (resultDataAll[0][0] > resultDataAll[1][0]) {
+		dom.innerHTML = 'You were out running more...asked ' + sportData.name + ' to join you next time </div>';
 	} else {
-		dom.innerHTML = 'You need to get out there more...meet up with your friend for running';	
+		dom.innerHTML = 'You need to get out there more...meet up with ' + sportData.name + ' for running</div>';	
 	}
 }
 

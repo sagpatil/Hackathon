@@ -1,6 +1,6 @@
 <html xmlns:og="http://ogp.me/ns" xmlns:fb="http://www.facebook.com/2008/fbml" lang="en" manifest="hackbook.manifest">
 <head>
-  <title>Hackbook</title>
+  <title>BeSporty-GetHealthy</title>
   <!-- See https://developers.facebook.com/docs/opengraph/ -->
   <meta property="og:title" content="Hackbook for Mobile Web" />
   <meta property="og:type" content="website" />
@@ -74,7 +74,6 @@
       <div class="show_when_connected">
         <ul>
          <li class="menu-item" onclick="openPage('Credits');getUserFriends();">Compare Yourself To Your Friends</li>
-         <li class="menu-item" onclick="openPage('Graph-API');">Graph API</li>
          <li id="login_button" class="menu-item" onclick="logout()" />Logout</li>
         </ul>
        
@@ -275,15 +274,16 @@
   </div>
   
   <!-- Page: Social Plugins -->
-  <div id="page-Social-Plugins" class="page"> 
+  <div id="page-Social-Plugins" class="page">
     <p id="main-desc">
-    	How do y'all compare...?
+    	How do y'all compare...? [based on Endomondo and MapMyRun]
     </p>
-      
+  <div style = "width:70%;margin:20px auto; font-size:18px;color: #666">
     <div class="section">
 			<div id="yourstats"></div>
 			<div id="friendstats"></div>
 			<p><div id="statresults"></div></p>
+    </div>
     </div>
   </div>
   
