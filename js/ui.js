@@ -7,6 +7,42 @@
 //show a loading screen when launched, until we get the user's session back
 setAction("Loading Hackbook", true);
 
+getSportyFriends();
+
+function getSportyFriends() {
+  var markup = '<h1>Your Sporty Friends!!</h1>';
+  friendsInfo = new Array();
+  for (var i=0, l=localStorage.length; i<l; i++){
+        var key = localStorage.key(i);
+      //  var value = localStorage[key];
+        friendsInfo[i] = getSportData(key);
+}
+  //friendsInfo = new Array(getSportsData(12606341),getSportsData(551525361));
+  for (var i=0; i < friendsInfo.length && i < 25; i++) {
+    markup = markup + '<img src="' + friendsInfo[i].picture + '">' + '&nbsp;&nbsp;&nbsp;<b>' + friendsInfo[i].name + '</b><br />';
+  }
+  
+  FB.$('sporty-friends').innerHTML = markup;
+}
+
+function storeSportData(id, storeData) {
+  
+localStorage.setItem(id, JSON.stringify(storeData));
+console.log('storing Object: ', +JSON.stringify(storeData));
+
+}
+
+function getSportData(id){
+  
+  var retrievedObject = JSON.parse(localStorage.getItem(id));
+  console.log('stored Object: ', +retrievedObject);
+  if(retrievedObject != null)
+  {
+    return retrievedObject;
+  }
+  else return {};
+}
+
 //Swaps the pages out when the user taps on a choice
 function openPage(pageName, ignoreHistoryPush) {
   window.scrollTo(0,1);
@@ -21,7 +57,7 @@ function openPage(pageName, ignoreHistoryPush) {
   
   page.style.display = "block";
   
-  title = (pageName == 'root') ? 'Hackbook' : pageName.replace(/-/g, ' ');
+  title = "BeSporty-GetHealthy";
   document.getElementById('title').innerHTML = title;
   
   if (ignoreHistoryPush != true) {

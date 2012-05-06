@@ -49,7 +49,7 @@
   </div>
   
   <!-- Page: Homepage -->
-  <div id="page-root" class="page">
+  <div id="page-temp" class="page">
       <div class="show_when_connected">
         <div id="welcome"><img id="user-picture" /><br /><span id="user-name"></span></div>
       </div>
@@ -64,53 +64,38 @@
     </ul>
     <div id="like-button"><fb:like url="http://www.cnn.com/" width="275"></fb:like></div>
   </div>
-  
   <!-- Page: Login and Permissions -->
-  <div id="page-Login" class="page"> 
-    <p id="main-desc">
-      Facebook Platform uses the OAuth 2.0 protocol for logging a user into your app.
-      The Login button in the top right of this app, shown when you're logged out, is a good example.<br /><br />
-      <strong>Check out the mobile web app tutorial at <a href="http://developers.facebook.com/docs/mobile/web/build//">developers.facebook.com/docs/mobile/web/build/</a></strong>
-    </p>
-      
+  <div id="page-root" class="page">
     <div class="section">
-      <div class="show_when_not_connected">
-        <h1>Logging the user in</h1>
-        <p>
-          If a user visit your site directly, you will need to ask them to login with Facebook.
-        </p>
+      <div id = "sporty-friends" style= "width:50%; margin : 20px auto"></div>
+     <div class="show_when_not_connected">
+        <li id="login_button" class="menu-item" onclick="promptLogin()" />Login</li>
       </div>
       <div class="show_when_connected">
-        <h1>Logging the user out</h1>
-        <p>
-          You should include a button to enable the user to log out.  Also, you can include a button so that the user can uninstall your app.
-        </p>
+        <ul>
+         <li class="menu-item" onclick="openPage('Credits');getUserFriends();">Compare Yourself To Your Friends</li>
+         <li class="menu-item" onclick="openPage('Graph-API');">Graph API</li>
+         <li id="login_button" class="menu-item" onclick="logout()" />Logout</li>
+        </ul>
+       
+     <!--   <div id="login_button" class="button" onclick="uninstallApp()" />Uninstall app</div> -->
       </div>
-      
-      <div class="show_when_not_connected">
-        <div id="login_button" class="button" onclick="promptLogin()" />Login using Facebook</div>
-      </div>
-      <div class="show_when_connected">
-        <div id="login_button" class="button" onclick="logout()" />Logout</div>
-        <div id="login_button" class="button" onclick="uninstallApp()" />Uninstall app</div>
-      </div>
-    </div>
-  
-    <div class="section">
-      <h1>Asking for extended permissions</h1>
-      <p>
-        If your app needs more than this basic information to function, you must request specific permissions from the user.
-        For example, you might prompt the user to grant access to their Likes in order to recommend related content for them.
-      </p>
-      
-      <div id="extended_permission_button" class="button button-requires-connect" onclick="promptExtendedPermissions()" />Grant the 'user_likes' permission</div>
-      
-      <div class="info-requires-connect">You need to login before you can use this functionality.</div>
     </div>
   </div>
-  
+  <div id="page-friends" class="page">
+      <h1>Get user's friends</h1>
+      <p>
+        To make your mobile web app social, you can fetch their friends' information like profile pictures and names.
+      </p>
+      
+      <div id="user-friends"></div>
+      
+      <div class="button button-requires-connect" onclick="getUserFriends();hideButton(this);" />Get your friends</div>
+      
+      <div class="info-requires-connect">You need to login before you can use this functionality.</div>      
+  </div>
   <!-- Page: Requests -->
-  <div id="page-Requests" class="page"> 
+  <div id="page-Requests" class="page">
     <p id="main-desc">
       Requests allows the user to invite their friends to the app, or to re-engage their friends so they come back to your app.  
       Friends receive requests in Notifications on Facebook.
@@ -197,6 +182,22 @@
       <strong>Check out the mobile web app tutorial at <a href="http://developers.facebook.com/docs/mobile/web/build//">developers.facebook.com/docs/mobile/web/build/</a></strong>
     </p>
     
+        <div class="section">
+      <h1>Get Sport Data</h1>
+      <p>
+        All Sport Data
+      </p>
+      
+      <div id="sport-data"></div>
+      <div id="sport-data-friend"></div>
+      
+      <div class="button button-requires-connect" onclick="fetchSportData();hideButton(this);" />Get Sport Data</div>
+      
+      <div class="info-requires-connect">You need to login before you can use this functionality.</div>
+      
+    </div>
+    
+    
     <div class="section">
       <h1>Get user's basic information</h1>
       <p>
@@ -223,7 +224,8 @@
       <div class="info-requires-connect">You need to login before you can use this functionality.</div>
       
     </div>
-    
+   
+
     <div class="section">
       <h1>Get user's recent check-ins</h1>
       <p>
@@ -266,37 +268,34 @@
   <!-- Page: Credits -->
   <div id="page-Credits" class="page"> 
     <p id="main-desc">
-      Your app or game can prompt the user to pay for a virtual good by using Credits.
-      <br /><br />
-      <strong>Check out the mobile web app tutorial at <a href="http://developers.facebook.com/docs/mobile/web/build//">developers.facebook.com/docs/mobile/web/build/</a></strong>
+    	Pick some friends.
     </p>
-    
-    <div class="section">
-      <h1>Prompting the user to pay</h1>
-      <p>
-        This allows the user to pay for a virtual good in your app or game.
-      </p>
-      
-      <div id="publish_button" class="button" onclick="sendPay()" />Prompt to Pay</div>
-    </div>
+
+		<div id="friends"></div>
   </div>
   
   <!-- Page: Social Plugins -->
   <div id="page-Social-Plugins" class="page"> 
     <p id="main-desc">
-      Social plugins lets a user see what their friends have liked, commented on or shared on sites across the web.
-      Currently, the only social plugin that's available is the Like button. More coming soon.<br /><br />
-      <strong>Check out the mobile web app tutorial at <a href="http://developers.facebook.com/docs/mobile/web/build//">developers.facebook.com/docs/mobile/web/build/</a></strong>
+    	How do y'all compare...?
     </p>
       
     <div class="section">
-      <h1>Like button</h1>
-      <p>
-        <fb:like></fb:like>
-      </p>
+			<div id="yourstats"></div>
+			<div id="friendstats"></div>
+			<p><div id="statresults"></div></p>
     </div>
   </div>
   
+  <!-- Page: Social Plugins -->
+  <div id="page-pick-friend" class="page"> 
+    <p id="main-desc">
+    	Pick some friends.
+    </p>
+
+		<div id="friends"></div>
+  </div>
+
   <script src="js/_config.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/auth.js"></script>

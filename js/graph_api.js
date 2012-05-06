@@ -50,13 +50,15 @@ function getUserBasicInfo() {
 
 //Get the user's friends
 function getUserFriends() {
-  var markup = '<div class="data-header">Friends (capped at 25):</div>';
+  var markup = '<div class="data-header"></div><div style = "width :70%; margin : 20px auto;"><ul id="friends-list">';
   
-  for (var i=0; i < friendsInfo.length && i < 25; i++) {
-    markup = markup + '<img src="' + friendsInfo[i].picture + '">' + friendsInfo[i].name + '<br />';
+  for (var i=0; i < friendsInfo.length; i++) {
+    markup = markup + '<li onclick="doComparison(\'' + friendsInfo[i].name + '\',\'' + friendsInfo[i].id + '\',\'' + friendsInfo[i].picture + '\')" style = "list-style-type: none; height = 20%;"><img src="' + friendsInfo[i].picture + '">' + '&nbsp;&nbsp;&nbsp;<b>' + friendsInfo[i].name + '</b></li><br />';
   }
-  
-  FB.$('user-friends').innerHTML = markup;
+    
+  markup = markup + "</ul></div>"
+  FB.$('friends').innerHTML = markup; 
+
 }
 
 //Get the user's check-ins
@@ -218,4 +220,174 @@ function preFetchData() {
       console.log('Got friends that are not using the app yet: ', nonAppFriendIDs);
     });
   });
+}
+
+function fetchSportData() {
+  var markup = '<div class="data-header">Sport Data not included yet:</div>';
+
+  FB.api('12606341/endoapp:track/workout', function(sportResponse) {
+		var data = sportResponse.data;
+		var displayData = parseEndomondoSportData(data);
+  	var text = markup + genSportResultString(displayData);
+		var dom = FB.$('sport-data');
+	 	dom.innerHTML = text;
+	 	fetchSportData2();
+	});
+}
+
+function fetchSportData2() {
+  FB.api('551525361/endoapp:track/workout', function(sportResponse) {
+		var data = sportResponse.data;
+		var displayData = parseEndomondoSportData(data);
+	 	var text = genSportResultString(displayData);
+		var dom = FB.$('sport-data-friend');
+	 	dom.innerHTML = text;
+	 	fetchSportData3();
+	});
+}
+
+function fetchSportData3() {
+	FB.api('12606341/mapmyrideapp:did/workout', function(sportResponse) {
+		var data = sportResponse.data;
+		var displayData = parseMapMyRunSportData(data);
+  	var text = genSportResultString(displayData);
+		var dom = FB.$('sport-data');
+	 	dom.innerHTML = dom.innerHTML + text;
+	 	fetchSportData4();
+	});
+}
+
+function fetchSportData4() {
+	FB.api('551525361/mapmyrideapp:did/workout', function(sportResponse) {
+		var data = sportResponse.data;
+		var displayData = parseMapMyRunSportData(data);
+  	var text = genSportResultString(displayData);
+		var dom = FB.$('sport-data-friend');
+	 	dom.innerHTML = dom.innerHTML + text;
+	});
+}
+
+
+function genSportResultString(displayData) {
+ return '<div class="info">'
+        + '  <div class="name"> You worked out ' + displayData[1] + ' for ' + (displayData[2] / 60.0 / 60.0).toFixed(2) + ' hours and went ' + displayData[0].toFixed(2) + ' miles.</div>'
+        + '</div>';
+}
+
+function parseEndomondoSportData(data) {
+
+	var totalDistance = 0;
+	var totalWorkouts = 0;
+	var totalDuration = 0;
+
+	for (var i=0; i < data.length; i++) {
+		var workout = data[i];
+		var workoutData = workout.data;
+		if (workoutData.unit == 'km') {
+			totalDistance += workoutData.distance * 0.62;
+		} else {
+			totalDistance += workoutData.distance;
+		}
+	
+		totalDuration += workoutData.duration;
+	}
+	totalWorkouts = data.length;
+
+	var output = new Array();
+	output[0] = totalDistance;
+	output[1] = totalWorkouts;
+	output[2] = totalDuration;
+	return output;
+}
+
+function parseMapMyRunSportData(data) {
+
+	var totalDistance = 0;
+	var totalWorkouts = 0;
+	var totalDuration = 0;
+
+	for (var i=0; i < data.length; i++) {
+		var workout = data[i];
+		var workoutData = workout.data;
+		var distanceStrLength = workoutData.distance.length;
+		var unit = workoutData.distance.substring(distanceStrLength - 2, distanceStrLength)
+		if (unit == 'km') {
+			totalDistance += workoutData.distancevalue * 0.62;
+		} else {
+			totalDistance += workoutData.distancevalue;
+		}	
+		totalDuration += workoutData.durationvalue;
+	}
+	totalWorkouts = data.length;
+
+	var output = new Array();
+	output[0] = totalDistance;
+	output[1] = totalWorkouts;
+	output[2] = totalDuration;
+	return output;
+}
+
+function doComparison(name, id, picture) {
+  var sportData = {};
+  sportData.name = name;
+  sportData.picture = picture;
+	storeSportData(id, sportData);
+
+  openPage('Social-Plugins');  
+	var resultDataAll = new Array();
+	fetchSportDataAll(resultDataAll, id);
+}
+
+function doComparisonComplete(resultDataAll, friendId) {
+	var dom = FB.$('yourstats');
+	dom.innerHTML = genSportResultString(resultDataAll[0]);
+	var sportData = getSportData(friendId);
+	var dom = FB.$('friendstats');
+	dom.innerHTML = '<div>' + sportData.name + '</div>';
+	dom.innerHTML += genSportResultString(resultDataAll[1]);
+	var dom = FB.$('statresults');
+
+	if (resultDataAll[0].totalDistance > resultDataAll[1].totalDistance) {
+		dom.innerHTML = 'You were out running more...asked your friend to join you next time';
+	} else {
+		dom.innerHTML = 'You need to get out there more...meet up with your friend for running';	
+	}
+}
+
+function fetchSportDataAll(resultDataAll, friend) {
+  var markup = '<div class="data-header">Sport Data not included yet:</div>';
+
+  FB.api('me/endoapp:track/workout', function(sportResponse) {
+		var data = sportResponse.data;
+		var displayData = parseEndomondoSportData(data);
+		resultDataAll[0] = displayData;
+	 	fetchSportData2All(resultDataAll, friend);
+	});
+}
+
+function fetchSportData2All(resultDataAll, friend) {
+  FB.api(friend + '/endoapp:track/workout', function(sportResponse) {
+		var data = sportResponse.data;
+		var displayData = parseEndomondoSportData(data);
+		resultDataAll[1] = displayData;
+	 	fetchSportData3All(resultDataAll, friend);
+	});
+}
+
+function fetchSportData3All(resultDataAll, friend) {
+	FB.api('me/mapmyrideapp:did/workout', function(sportResponse) {
+		var data = sportResponse.data;
+		var displayData = parseMapMyRunSportData(data);
+		resultDataAll[2] = displayData;
+	 	fetchSportData4All(resultDataAll, friend);
+	});
+}
+
+function fetchSportData4All(resultDataAll, friend) {
+	FB.api(friend + '/mapmyrideapp:did/workout', function(sportResponse) {
+		var data = sportResponse.data;
+		var displayData = parseMapMyRunSportData(data);
+		resultDataAll[3] = displayData;
+		doComparisonComplete(resultDataAll, friend);
+	});
 }

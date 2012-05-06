@@ -52,7 +52,7 @@ FB.Event.monitor('auth.statusChange', function(session) {
 
 //Prompt the user to login and ask for the 'email' permission
 function promptLogin() {
-  FB.login(null, {scope: 'email'});
+  FB.login(null, {scope: 'email, user_actions:endoapp, user_actions:mapmyrideapp, friends_actions:endoapp, friends_actions:mapmyrideapp'});
 }
 
 //This will prompt the user to grant you acess to their Facebook Likes
